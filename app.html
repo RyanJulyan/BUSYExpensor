@@ -1,0 +1,93 @@
+<script>
+var app = {
+	data:{},
+	editProperty:function(property, value){
+		this.data[property] = value;
+	},
+	editSubProperty:function(property,subproperty, value){
+		this.data[property][subproperty] = value;
+	},
+	_ID:function(el){
+		return document.getElementById(el);
+	},
+	ajaxRequest: function(address_url){
+		var ajax = new XMLHttpRequest();
+		ajax.upload.addEventListener("progress", this.fileProgressHandler, false);
+		ajax.addEventListener("load", this.fileCompleteHandler, false);
+		ajax.addEventListener("error", this.fileErrorHandler, false);
+		ajax.addEventListener("abort", this.fileAbortHandler, false);
+		ajax.open("GET",address_url);
+		ajax.send();
+	},
+	fileUpload:function(file, url){
+		this.editProperty("file", {type:file.name});
+		this.editProperty("file", {type:file.type});
+		this.editProperty("file", {size:file.size});
+		var formdata = new FormData();
+		formdata.append("file1", file);
+		var ajax = new XMLHttpRequest();
+		ajax.upload.addEventListener("progress", this.fileProgressHandler, false);
+		ajax.addEventListener("load", this.fileCompleteHandler, false);
+		ajax.addEventListener("error", this.fileErrorHandler, false);
+		ajax.addEventListener("abort", this.fileAbortHandler, false);
+		ajax.open("POST", url);
+		ajax.send(formdata);
+	},
+	fileProgressHandler:function(event){
+		this.editProperty("file", {status:event.target.responseText});
+		this.editProperty("file", {totalUploadSize:event.total});
+		this.editProperty("file", {totalUploaded:event.loaded});
+		this.editProperty("totalUploadedMessage", "Uploaded "+event.loaded+" bytes of "+event.total);
+		this.editProperty("percentUploaded", Math.round((event.loaded / event.total) * 100));
+		this.editProperty("percentUploadedMessage", Math.round((event.loaded / event.total) * 100)+"% uploaded... please wait");
+	},
+	fileCompleteHandler:function(event){
+		console.log(this);
+		this.editProperty("file", {status:event.target.responseText});
+	},
+	fileErrorHandler:function(event){
+		this.editProperty("file", {status:"Upload Failed"});
+	},
+	fileAbortHandler:function(event){
+		this.editProperty("file", {status:"Upload Aborted"});
+	},
+	getLocation:function() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
+		} else {
+			return "Geolocation is not supported by this browser.";
+		}
+	},
+	showPosition:function(position) {
+		var latlon = position.coords.latitude + "," + position.coords.longitude;
+		
+		var address_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latlon+"&key=AIzaSyAdrM7sgTdLeqAzTB6_RmFnLB4IRkfKreY";
+		
+		this.ajaxRequest(address_url);
+	},
+	showError:function(error) {
+		switch(error.code) {
+			case error.PERMISSION_DENIED:
+				x.innerHTML = "User denied the request for Geolocation."
+				break;
+			case error.POSITION_UNAVAILABLE:
+				x.innerHTML = "Location information is unavailable."
+				break;
+			case error.TIMEOUT:
+				x.innerHTML = "The request to get user location timed out."
+				break;
+			case error.UNKNOWN_ERROR:
+				x.innerHTML = "An unknown error occurred."
+				break;
+		}
+	}
+}
+
+function apper(data){
+	console.log(data);
+}
+
+function test(callback){
+		callback("What");
+}
+</script>

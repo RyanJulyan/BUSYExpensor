@@ -1,19 +1,32 @@
 <script>
 var app = {
 	data:{
-		version:"0.0.1"
+		version:"0.0.1",
+		tags:{}
 	},
 	editProperty:function(property, value){
+		/*
+		// Not working in time, Getting Duplicated Data
 		if(typeof this.data[property] != "undefined"){
 			this.data[property+"_old"] = this.data[property];
 		}
+		*/
 		this.data[property] = value;
 	},
 	editSubProperty:function(property,subproperty, value){
+		/*
+		// Not working in time, Getting Duplicated Data
 		if(typeof this.data[property][subproperty] != "undefined"){
 			this.data[property][subproperty+"_old"] = this.data[property][subproperty];
 		}
+		*/
 		this.data[property][subproperty] = value;
+	},
+	deleteProperty:function(property){
+		delete this.data[property]
+	},
+	deleteSubProperty:function(property,subproperty){
+		delete this.data[property][subproperty]
 	},
 	_ID:function(el){
 		return document.getElementById(el);
@@ -109,6 +122,38 @@ var app = {
 		}
 	}
 }
+
+function addTag(parent, tag){
+	if(parent == "uncategorised"){
+		if(tag in app.data.tags){
+			return "That TAG Already Exists";
+		}
+		else{
+			app.editSubProperty("tags", tag, []);
+			return tag + " added to " + parent;
+		}
+	}
+	else if(typeof app.data.tags[parent] === "undefined"){
+		tags = [];
+		tags.push(tag);
+		app.editSubProperty("tags", parent, tags);
+		return tag + " added to " + parent;
+	}
+	else {
+		tags = app.data.tags[parent];
+		if(tags.indexOf(tag) == -1){
+			tags.push(tag);
+			app.editSubProperty("tags", parent, tags);
+			return tag + " added to " + parent;
+		}
+		else{
+			return "That TAG Already Exists";
+		}
+		
+	}
+}
+
+
 
 function roughSizeOfObject( value, level ) {
     if(level == undefined) level = 0;

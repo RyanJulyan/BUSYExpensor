@@ -1,3 +1,5 @@
+<div id='test' >What</div>
+<input id='test2' value='1' />
 <script>
 // SHow Sean Git
 
@@ -6,13 +8,25 @@ var app = {
 		version:"0.0.1"
 	},
 	editProperty:function(property, value){
+		if(typeof this.data[property] != "undefined"){
+			this.data[property+"_old"] = this.data[property];
+		}
 		this.data[property] = value;
 	},
 	editSubProperty:function(property,subproperty, value){
+		if(typeof this.data[property][subproperty] != "undefined"){
+			this.data[property][subproperty+"_old"] = this.data[property][subproperty];
+		}
 		this.data[property][subproperty] = value;
 	},
 	_ID:function(el){
 		return document.getElementById(el);
+	},
+	_IDval:function(el, val){
+		return document.getElementById(el).value = val;
+	},
+	_IDhtml:function(el, val){
+		return document.getElementById(el).innerHTML = val;
 	},
 	setLocalStorage: function(key, val){
 		localStorage.setItem(key, JSON.stringify(val));

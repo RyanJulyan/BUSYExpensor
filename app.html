@@ -12,6 +12,19 @@ var app = {
 	_ID:function(el){
 		return document.getElementById(el);
 	},
+	setLocalStorage: function(key, val){
+		localStorage.setItem(key, JSON.stringify(val));
+		this.data[key] = val;
+	},
+	getLocalStorage: function(key){
+		localStorageVal = localStorage.getItem(key);
+		try {
+			this.data[key] = JSON.parse(localStorageVal);
+		}
+		catch(err) {
+			this.data[key] = localStorageVal;
+		}
+	},
 	ajaxRequest: function(address_url){
 		var ajax = new XMLHttpRequest();
 		ajax.upload.addEventListener("progress", this.fileProgressHandler, false);
